@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) exit;
 class WWN_Order_Hooks
 {
     private $opt;
-    private $template_name = 'orderconfirm';
+    private $template_name = 'ratinia'; // Default template name, can be changed in settings
     private $template_lang = 'en'; // Template language code
 
     public function __construct()
@@ -39,22 +39,16 @@ class WWN_Order_Hooks
     {
         if (!class_exists('WWN_DB_Handler')) return;
 
-        error_log("WWN DEBUG: on_order_status_changed triggered for Order ID {$order_id} ({$old_status} -> {$new_status})");
-
-        // Grab billing phone from order as source, sanitize before saving
-        $raw_phone = method_exists($order, 'get_billing_phone') ? $order->get_billing_phone() : '';
-        error_log("WWN DEBUG: Raw phone from order {$order_id}: {$raw_phone}");
-
-        $phone = WWN_DB_Handler::sanitize_phone($raw_phone, '91');
-        error_log("WWN DEBUG: Sanitized phone for order {$order_id}: {$phone}");
-        // Grab billing name & email
+        // Grab billing phone, name & email
+        $raw_phone  = method_exists($order, 'get_billing_phone') ? $order->get_billing_phone() : '';
+        $phone      = WWN_DB_Handler::sanitize_phone($raw_phone, '91');
         $user_name  = method_exists($order, 'get_billing_first_name') ? $order->get_billing_first_name() : '';
         $user_email = method_exists($order, 'get_billing_email') ? $order->get_billing_email() : '';
 
-        // Upsert into our custom table
+        // Upsert into notifications table
         WWN_DB_Handler::upsert_order($order_id, $new_status, $phone, '', $user_name, $user_email);
 
-        error_log("WWN DEBUG: Order {$order_id} saved in custom table with phone {$phone} and status {$new_status}");
+        error_log("WWN DEBUG: Order {$order_id} saved with phone {$phone}, name {$user_name}, email {$user_email}, status {$new_status}");
     }
 
     /**
@@ -121,7 +115,7 @@ class WWN_Order_Hooks
             "type"              => "template",
             "template"          => array(
                 "name"     => "orderconfirm",               // Template name (screenshot ke hisaab se)
-                "language" => array("code" => "en"),        // ya en_US agar aisa approve hai
+                "language" => array("code" => $this->template_lang), // ya en_US agar aisa approve hai
                 "components" => array(
                     array(
                         "type"       => "body",
