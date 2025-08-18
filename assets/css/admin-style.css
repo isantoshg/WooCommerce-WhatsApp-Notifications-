@@ -1,0 +1,131 @@
+/* .wwn-wrap {
+    max-width: 980px;
+}
+
+.wwn-card {
+    background: #fff;
+    padding: 18px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    margin-top: 12px;
+}
+
+.form-table th {
+    width: 250px;
+} */
+ /* ===== Wrapper ===== */
+.wwn-wrap {
+    /* max-width: 980px; */
+    margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #1f2937;
+    background: #f9fafb;
+    padding: 20px;
+}
+
+/* ===== Card ===== */
+.wwn-card {
+    background: #ffffff;
+    padding: 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    margin-top: 18px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+.wwn-token-field {
+    display: flex;
+    gap: 5px;
+}
+
+/* ===== Headings ===== */
+.wwn-wrap h1,
+.wwn-wrap h2 {
+    color: #111827;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.wwn-wrap p.description {
+    color: #6b7280;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+/* ===== Table Styling ===== */
+.form-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.form-table th {
+    width: 250px;
+    padding: 14px 10px;
+    text-align: left;
+    font-weight: 600;
+    color: #374151;
+    vertical-align: middle;
+}
+
+.form-table td {
+    padding: 14px 10px;
+}
+
+/* ===== Input Fields ===== */
+.form-table input[type="text"],
+.form-table input[type="password"],
+.form-table textarea,
+.form-table select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #f9fafb;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.form-table input:focus,
+.form-table textarea:focus,
+.form-table select:focus {
+    border-color: #3b82f6;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    outline: none;
+}
+
+/* ===== Buttons ===== */
+.wwn-button {
+    display: inline-block;
+    padding: 12px 22px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.wwn-button:hover {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    transform: translateY(-2px);
+}
+
+.wwn-button:active {
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    transform: translateY(0);
+}
+
+/* ===== Info Notice Box ===== */
+.wwn-notice {
+    background: #eff6ff;
+    border-left: 4px solid #3b82f6;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #1e40af;
+}
