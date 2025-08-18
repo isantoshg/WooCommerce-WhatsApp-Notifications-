@@ -153,20 +153,20 @@ class WWN_Settings_Page {
         <?php
     }
 
-    private function send_broadcast_occupation($occupation, $message) {
-        $args = [
-            'meta_key'   => 'billing_occupation',
-            'meta_value' => $occupation,
-            'fields'     => ['ID']
-        ];
-        $users = get_users($args);
-        $count = 0;
-        foreach ($users as $u) {
-            $phone = get_user_meta($u->ID, 'billing_phone', true);
-            if (!$phone) continue;
-            WWN_Send_Message::send_text($phone, $message);
-            $count++;
-        }
-        return $count;
-    }
+    // private function send_broadcast_occupation($occupation, $message) {
+    //     $args = [
+    //         'meta_key'   => 'billing_occupation',
+    //         'meta_value' => $occupation,
+    //         'fields'     => ['ID']
+    //     ];
+    //     $users = get_users($args);
+    //     $count = 0;
+    //     foreach ($users as $u) {
+    //         $phone = get_user_meta($u->ID, 'billing_phone', true);
+    //         if (!$phone) continue;
+    //         WWN_Send_Message::send_text($phone, $message);
+    //         $count++;
+    //     }
+    //     return $count;
+    // }
 }
