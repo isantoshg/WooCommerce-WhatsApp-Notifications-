@@ -14,8 +14,8 @@ define('WWN_VERSION', '1.0.1');
 define('WWN_PLUGIN_FILE', __FILE__);
 define('WWN_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('WWN_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('WWN_OPTION_KEY', 'wwn_settings'); 
-define('WWN_CART_OPTION', 'wwn_abandoned_carts'); 
+define('WWN_OPTION_KEY', 'wwn_settings');
+define('WWN_CART_OPTION', 'wwn_abandoned_carts');
 define('WWN_TABLE_NAME', 'wp_wwn_notifications'); // custom table
 
 // Includes
@@ -24,6 +24,7 @@ require_once WWN_PLUGIN_DIR . 'includes/class-send-message.php';
 require_once WWN_PLUGIN_DIR . 'includes/class-order-hooks.php';
 require_once WWN_PLUGIN_DIR . 'includes/class-cron-handler.php';
 require_once WWN_PLUGIN_DIR . 'includes/class-db-handler.php';
+require_once WWN_PLUGIN_DIR . 'includes/class-manual-offer-sender.php';
 
 // Activation: create table + schedule cron
 // register_activation_hook(__FILE__, function () {
@@ -82,16 +83,16 @@ register_activation_hook(__FILE__, function () {
             'app_id'           => '',
             'phone_number_id'  => '',
             'access_token'     => '',
-            'admin_phone'      => '',  
-            'brand_name'       => 'Your Brand', 
-            'abandon_delay_m'  => 240, 
+            'admin_phone'      => '',
+            'brand_name'       => 'Your Brand',
+            'abandon_delay_m'  => 240,
             'enable_logs'      => 1,
         ));
     }
 
     // Cart store
     if (!get_option(WWN_CART_OPTION)) {
-        add_option(WWN_CART_OPTION, array()); 
+        add_option(WWN_CART_OPTION, array());
     }
 
     $charset_collate = $wpdb->get_charset_collate();
@@ -112,8 +113,6 @@ register_activation_hook(__FILE__, function () {
         KEY order_id (order_id),
         KEY status (status)
     ) $charset_collate;";
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-    dbDelta($sql_notifications);
 
     // 2️⃣ Create a new logs table
     $logs_table = $wpdb->prefix . "wwn_logs";
@@ -126,7 +125,23 @@ register_activation_hook(__FILE__, function () {
         PRIMARY KEY (id),
         KEY order_id (order_id)
     ) $charset_collate;";
+
+    $table_name = $wpdb->prefix . 'wwn_sent_offers';
+    $charset_collate = $wpdb->get_charset_collate();
+    $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+        id BIGINT(20) NOT NULL AUTO_INCREMENT,
+        phone VARCHAR(20) NOT NULL,
+        template_name VARCHAR(255) NOT NULL,
+        sent_at DATETIME NOT NULL,
+        sent_by VARCHAR(50) NOT NULL,
+        PRIMARY KEY (id)
+    ) $charset_collate;";
+
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql_notifications);
     dbDelta($sql_logs);
+    dbDelta($sql);
+
 
     // Schedule cron
     if (!wp_next_scheduled('wwn_abandoned_cart_cron')) {
@@ -150,9 +165,11 @@ add_action('woocommerce_loaded', function () {
 
     // Boot components
     new WWN_Settings_Page();
-    WWN_Send_Message::boot(); 
+    WWN_Send_Message::boot();
     new WWN_Order_Hooks();
     new WWN_Cron_Handler();
+    new WWN_Manual_Offer_Sender();
+
 
     error_log("WWN DEBUG: Plugin fully initialized after WooCommerce loaded");
 });
