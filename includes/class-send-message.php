@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) exit;
 class WWN_Send_Message {
 
     protected static $settings;
-    const API_VERSION = 'v19.0'; // Change here when Meta updates API version
+    const API_VERSION = 'v22.0'; // Change here when Meta updates API version
 
     public static function boot() {
         self::$settings = get_option(WWN_OPTION_KEY, []);

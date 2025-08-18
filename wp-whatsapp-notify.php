@@ -25,6 +25,7 @@ require_once WWN_PLUGIN_DIR . 'includes/class-order-hooks.php';
 require_once WWN_PLUGIN_DIR . 'includes/class-cron-handler.php';
 require_once WWN_PLUGIN_DIR . 'includes/class-db-handler.php';
 require_once WWN_PLUGIN_DIR . 'includes/class-manual-offer-sender.php';
+// include_once plugin_dir_path(__FILE__) . 'wwn_test.php';
 
 // Activation: create table + schedule cron
 // register_activation_hook(__FILE__, function () {
