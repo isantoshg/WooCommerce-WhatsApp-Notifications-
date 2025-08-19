@@ -89,6 +89,11 @@ class WWN_Order_Hooks
                         "parameters" => [
                             [
                                 "type" => "text",
+                                "parameter_name" => "user_name",
+                                "text" => $user_name 
+                            ],
+                            [
+                                "type" => "text",
                                 "parameter_name" => "order_id",
                                 "text" => "OID{$order_id}RC"
                             ]
