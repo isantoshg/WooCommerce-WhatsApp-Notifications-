@@ -64,7 +64,15 @@ class WWN_Order_Hooks {
         $url = "https://graph.facebook.com/v22.0/{$phone_number_id}/messages";
         $user_name   = $order->get_billing_first_name();
         $order_total = $order->get_total();
+        // Order products
+        $items = $order->get_items();
+         $product_name = "";
 
+        foreach ( $items as $item ) {
+            $product_name = $item->get_name();
+
+            $quantity = $item->get_quantity();
+        }
         // error_log("========================================");
         // error_log($this->brand_name);
         // error_log("========================================");
@@ -109,38 +117,49 @@ class WWN_Order_Hooks {
 
         // --- Admin Payload ---
         // $admin_phone = $this->opt['admin_phone'] ?? '';
-        // if ($admin_phone) {
-        //     $admin_payload = [
-        //         "messaging_product" => "whatsapp",
-        //         "to"                => $admin_phone,
-        //         "type"              => "template",
-        //         "template"          => [
-        //             "name"     => "admin_order_notify",
-        //             "language" => ["code" => $this->template_lang],
-        //             "components" => [
-        //               [
-        //                 "type" => "body",
-        //                 "parameters" => [
-        //                      [
-        //                         "type" => "text",
-        //                         "parameter_name" => "user_name",
-        //                         "text" => $user_name 
-        //                     ],
-        //                     [
-        //                         "type" => "text",
-        //                         "parameter_name" => "order_id",
-        //                         "text" => "OID{$order_id}RC"
-        //                     ]
-        //                 ]
-        //             ]
-        //             ]
-        //         ]
-        //     ];
+        $admin_phone = '919990099608';
+        if ($admin_phone) {
+            $admin_payload = [
+                "messaging_product" => "whatsapp",
+                "to"                => $admin_phone,
+                "type"              => "template",
+                "template"          => [
+                    "name"     => "admin_confirmation",
+                    "language" => ["code" => $this->template_lang],
+                    "components" => [
+                      [
+                        "type" => "body",
+                        "parameters" => [
+                             [
+                                "type" => "text",
+                                "parameter_name" => "customer_name",
+                                "text" => $user_name 
+                            ],
+                            [
+                                "type" => "text",
+                                "parameter_name" => "product_name",
+                                "text" => $product_name
+                            ],
+                            [
+                                "type" => "text",
+                                "parameter_name" => "product_price",
+                                "text" => $order_total
+                            ],
+                            [
+                                "type" => "text",
+                                "parameter_name" => "order_id",
+                                "text" => "OID{$order_id}RC"
+                            ]
+                        ]
+                    ]
+                    ]
+                ]
+            ];
 
-        //     $this->send_whatsapp($url, $access_token, $admin_payload, $order_id, 'admin', $status_for_db);
-        // }
+            $this->send_whatsapp($url, $access_token, $admin_payload, $order_id, 'admin', $status_for_db);
+        }
 
-        // update_post_meta($order_id, $meta_key, 1);
+        update_post_meta($order_id, $meta_key, 1);
     }
 
     /**
